@@ -1,0 +1,450 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}CS-CALLING - QUICK LINK DETECTION (PROCESS){% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/w/dt/dt-1.10.18/datatables.min.css"/>
+{% endblock %}
+{% block body %}
+    <style>
+        fieldset {
+            border: 1px solid #ddd !important;
+            margin: 0;
+            xmin-width: 0;
+            padding: 10px;
+            position: relative;
+            border-radius: 4px;
+            padding-left: 10px !important;
+            background-color: #eff9f5;
+            border-color: #408863 !important;
+        }
+
+        fieldset.error {
+            border: 1px solid #ddd !important;
+            margin: 0;
+            xmin-width: 0;
+            padding: 10px;
+            position: relative;
+            border-radius: 4px;
+            padding-left: 10px !important;
+            background-color: #64001A;
+            border-color: black !important;
+        }
+
+        legend {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: auto;
+            /*border: 1px solid #ddd;*/
+            /*border-radius: 4px;*/
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+
+        }
+
+        .container2 {
+            width: 100%;
+            padding-right: 5px;
+            padding-left: 5px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .legendborder {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .legendborder-product {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 120px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .legendborderwidth {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 230px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .legendbordertel {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 150px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .viewer {
+            width: 100%;
+            height: 500px;
+            /*border: 1px solid black;*/
+            position: relative;
+        }
+
+        .control, fieldset {
+            margin: 6px 0;
+        }
+
+        .boxHead {
+            display: block;
+            height: 40px;
+            background-color: #408863;
+            color: white;
+            border-radius: 7px;
+        }
+
+        b {
+            font-size: 16px;
+
+        }
+
+        label {
+            font-size: 18px;
+            margin-top: 5px;
+            margin-left: 15px;
+        }
+
+
+        .btn-tel {
+            background-color: #408863 !important;
+            color: white !important;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+        }
+
+        .btn:active {
+            background-color: #408863 !important;
+        }
+
+        btn-outline-secondary {
+            border-color: #408863 !important;
+            color: #408863 !important;
+        }
+
+        .btn-outline-secondary:hover {
+            color: white !important;
+            background-color: #408863 !important;
+        }
+
+        .form-control:focus {
+            border-color: white !important;
+            box-shadow: white !important;
+        }
+
+        .btn-outline-primary {
+            border-color: #408863 !important;
+            color: #408863 !important;
+        }
+
+        .btn:active {
+            background-color: #408863 !important;
+        }
+
+        .btn-outline-primary:hover {
+            color: white !important;
+            background-color: #408863 !important;
+        }
+
+        .btn-outline-primary.focus, .btn-outline-secondary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5) !important;
+        }
+    </style>
+
+    <div class="example-wrapper">
+
+        <div align="center" style="margin-top: 75px;">
+            <h2 style="margin-top: 20px;">QuickLink Detection (ON PROCESS)</h2>
+        </div>
+        <div class="container" style="padding-right: 1px; padding-left: 1px;">
+            <div class="row">
+                <fieldset class="col-md-12">
+                    <h4>เลือกวันที่</h4>
+                    <form method="get">
+                        {% if dataMailCodeObj is not empty %}
+                        <select id="dateInput" name="search" class="form-control">
+                            <option value="empty">เลือกวันที่</option>
+                            {% for d in dataMailCodeObj %}
+                                <option value="{{ d.date }}">{{ d.date }} ({{ d.amount }})</option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                            <select id="dateInput" name="search" class="form-control">
+                                <option value="empty">{{ "now" | date('d-m-Y') }} (0)</option>
+                            </select>
+                        {% endif %}
+                        {% if test is not empty %}
+                            <h4>เลือกร้านค้า</h4>
+                            <select id="shopInput" name="merchantName" class="form-control">
+                                <option value="empty">เลือกร้านค้า</option>
+                                {% for k, d in test %}
+                                    <option value="{{ k }}">{{ d.shopName }} ({{ d.count }})</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                        <input type="submit" class="btn btn-outline-primary mt-3" value="ค้นหา">
+                    </form>
+                    {% for label, flashes in app.session.flashbag.all %}
+                        {% if ( label == 'error' ) %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <div class="text-center">
+                                    <p>{{ flashes[0] }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </fieldset>
+            </div>
+            {% if dataObj is not empty %}
+                <div class="row">
+                    <fieldset class="col-md-12">
+                        {% if app.request.query.get('search') is not empty %}
+                            <a href="{{ path('detection_process') }}">
+                                <button class="btn btn-outline-primary mt-3" style="margin-bottom: 5px">ย้อนกลับ
+                                </button>
+                            </a>
+                        {% endif %}
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>mailcode</th>
+                                <th>error_code</th>
+                                <th>shop_zipcode</th>
+                                <th>key_zipcode</th>
+                                <th>shop_transport_type</th>
+                                <th>key_transport_ype</th>
+                                <th>image</th>
+                                <th>updated_by</th>
+                                <th>clear_status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for k, data in dataObj %}
+                                <tr>
+                                    <th>{{ data.mailcode }}</th>
+                                    {% if data.errorCode is not null %}
+                                    <th>{{ data.errorCode }}</th>
+                                    {% else %}
+                                        <th> - </th>
+                                    {% endif %}
+                                    <th>{{ data.qlZipcode }}</th>
+                                    <th>{{ data.keyZipcode }}</th>
+                                    <th>{{ data.qlTransportType }}</th>
+                                    <th>{{ data.keyTransportType }}</th>
+                                    <th>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                onclick="showImage('{{ data.captureImage }}','{{ data.mailcode }}')"
+                                                data-target="#{{ data.mailcode }}">
+                                            รูปภาพ
+                                        </button>
+                                    </th>
+                                    {% if data.updatedBy is not null %}
+                                        <th>{{ data.updatedBy }}</th>
+                                    {% else %}
+                                        <th> - </th>
+                                    {% endif %}
+                                    <th>
+                                        <select name="test" id="{{ data.mailcode }}_selectChange"
+                                                onchange="updateProcess(this,'{{ data.mailcode }}')"
+                                                class="form-control">
+                                            {% if data.clearStatus == "COMPLETE" %}
+                                                <option id="10" value="{{ data.clearStatus }}" selected>COMPLETE
+                                                </option>
+                                                <option id="10" value="ON PROCESS">ON PROCESS
+                                                </option>
+                                            {% else %}
+                                                <option id="20" value="{{ data.clearStatus }}" selected>ON PROCESS
+                                                </option>
+                                                <option id="10" value="COMPLETE">COMPLETE
+                                                </option>
+                                            {% endif %}
+
+                                        </select></th>
+                                    <form method="post" id="formSubmit">
+                                        <input type="hidden" name="mailCode" id="mailCodeHidden" value=""/>
+                                    </form>
+                                </tr>
+                                <div class="modal fade" id="{{ data.mailcode }}">
+                                    <div class="modal-dialog modal-xl">
+                                        <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">รูปภาพ</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;
+                                                </button>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <fieldset class="col-md-12">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-body">
+                                                                    {% if data.captureImage != null %}
+                                                                        <div id="{{ data.mailcode }}_viewer"
+                                                                             class="viewer"></div>
+                                                                        <input type="hidden" class="parcelTemp"
+                                                                               id="parcelTemp"
+                                                                               value="{{ data.captureImage }}">
+                                                                    {% else %}
+                                                                        <p></p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {#                                //////////////////////////////////////////////////#}
+                                <div class="modal fade" tabindex="-1" role="dialog" id="mi-modal" data-backdrop="static" data-keyboard="false">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">เปลี่ยนสถานะ</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true" id="modal-btn-close">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {% if data.clearStatus == "COMPLETE" %}
+                                                    <p>ยืนยันการเปลี่ยนสถานะเป็น <b>ON PROCESS</b></p>
+                                                {% else %}
+                                                    <p>ยืนยันการเปลี่ยนสถานะเป็น <b>COMPLETE</b></p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" id="modal-btn-yes">
+                                                    ยืนยัน
+                                                </button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                        id="modal-btn-no">ปิด
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+            {% else %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/jquery.iviewer.js') }}"></script>
+    <script src="{{ asset('js/jquery.mousewheel.min.js') }}"></script>
+    <script>
+        var img = "";
+        var mailcode = "";
+        var modalMailCode = "";
+
+        $(document).ready(function () {
+            if ($('#dateInput').val('{{ app.request.query.get('search') }}').val() == null) {
+                $('#dateInput').val('empty')
+            } else {
+                $('#dateInput').val('{{ app.request.query.get('search') }}')
+            }
+
+            if ($('#shopInput').val('{{ app.request.query.get('merchantName') }}').val() == null) {
+                $('#shopInput').val('empty')
+            } else {
+                $('#shopInput').val('{{ app.request.query.get('merchantName') }}')
+            }
+
+        });
+
+        $('#dateInput').change(function () {
+            var item = $('#dateInput').find(":selected").val();
+            var url = '{{ path('detection_process') }}?search=' + item;
+            window.location.href = url.replace(item, item);
+        });
+
+        function updateProcess(process, mailCode) {
+            $("this option:selected").text();
+            modalMailCode = mailCode;
+            let dataObj = [mailCode, process.value];
+            $("#mailCodeHidden").val(JSON.stringify(dataObj));
+            $("#mi-modal").modal('show');
+        }
+
+        $("#modal-btn-yes").on("click", function () {
+            $("#formSubmit").submit();
+        });
+
+        $("#modal-btn-no").on("click", function () {
+            $('#' + modalMailCode + '_selectChange').prop('selectedIndex', 0);
+        });
+
+        $("#modal-btn-close").on("click", function () {
+            $('#' + modalMailCode + '_selectChange').prop('selectedIndex', 0);
+        });
+
+        function showImage(image, mailCode) {
+            img = image;
+            mailcode = mailCode;
+            $("#" + mailcode + "_viewer").iviewer({
+                src: img,
+                update_on_resize: true,
+                zoom_animation: true,
+                zoom: "100",
+                mousewheel: true,
+                ui_disabled: false,
+                onMouseMove: function (ev, coords) {
+                },
+                onStartDrag: function (ev, coords) {
+                    return true;
+                }, //this image will not be dragged
+                onDrag: function (ev, coords) {
+                }
+            });
+        }
+    </script>
+{% endblock %}

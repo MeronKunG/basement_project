@@ -1,0 +1,748 @@
+{% extends 'base3.html.twig' %}
+
+{% block title %}CS-CALLING - PHONE SEARCH{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/w/dt/dt-1.10.18/datatables.min.css"/>
+{% endblock %}
+{% block body %}
+    <style>
+        fieldset {
+            border: 1px solid #ddd !important;
+            margin: 0;
+            xmin-width: 0;
+            padding: 10px;
+            position: relative;
+            border-radius: 4px;
+            padding-left: 10px !important;
+            background-color: #eff9f5;
+            border-color: #408863 !important;
+        }
+
+        legend {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: auto;
+            /*border: 1px solid #ddd;*/
+            /*border-radius: 4px;*/
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+
+        }
+
+        .legendborder {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .legendborder-product {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 120px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .legendborderwidth {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 230px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .legendbordertel {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 150px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .viewer {
+            width: 100%;
+            height: 500px;
+            /*border: 1px solid black;*/
+            position: relative;
+        }
+
+        .control, fieldset {
+            margin: 6px 0;
+        }
+
+        .boxHead {
+            display: block;
+            height: 40px;
+            background-color: #408863;
+            color: white;
+            border-radius: 7px;
+        }
+
+        b {
+            font-size: 16px;
+
+        }
+
+        label {
+            font-size: 18px;
+            margin-top: 5px;
+            margin-left: 15px;
+        }
+
+
+        .btn-tel {
+            background-color: #408863 !important;
+            color: white !important;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+        }
+
+        .btn:active {
+            background-color: #408863 !important;
+        }
+
+        btn-outline-secondary {
+            border-color: #408863 !important;
+            color: #408863 !important;
+        }
+
+        .btn-outline-secondary:hover {
+            color: white !important;
+            background-color: #408863 !important;
+        }
+
+        .form-control:focus {
+            border-color: white !important;
+            box-shadow: white !important;
+        }
+
+        .btn-outline-primary {
+            border-color: #408863 !important;
+            color: #408863 !important;
+        }
+
+        .btn:active {
+            background-color: #408863 !important;
+        }
+
+        .btn-outline-primary:hover {
+            color: white !important;
+            background-color: #408863 !important;
+        }
+
+        .btn-outline-primary.focus, .btn-outline-secondary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5) !important;
+        }
+    </style>
+
+    <div class="example-wrapper">
+
+        <div align="center" style="margin-top: 75px;">
+            <h2 style="margin-top: 20px;">SENDER SEARCH</h2>
+        </div>
+        {#        <form method="get" name="date" action="">#}
+        {#            <fieldset class="col-md-12">#}
+        {#                <div class="row">#}
+        {#                    <div class="col-12">#}
+        {#                        {% for message in app.flashes('error') %}#}
+        {#                            <div class="alert alert-danger">#}
+        {#                                {{ message }}#}
+        {#                            </div>#}
+        {#                        {% endfor %}#}
+        {#                        {% set dataValue = '' %}#}
+        {#                        {% if app.request.get('search') is not null %}#}
+        {#                            {% set dataValue = app.request.get('search') %}#}
+        {#                        {% endif %}#}
+        {#                        <input type="text" class="form-control" id="search" placeholder="กรอกชื่อ/เบอร์โทร ผู้รับ" name="search" value="{{ dataValue }}"#}
+        {#                               autocomplete=off />#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#            </fieldset>#}
+        {#        </form>#}
+
+        {% if fields is not empty %}
+            <fieldset class="col-md-12">
+                    <button class="btn btn-primary" style=" margin-bottom: 5px;" type="button" data-toggle="collapse"
+                            data-target="#dateCollapse"
+                            aria-expanded="false" aria-controls="collapseExample">
+                        เลือกแทร็กกิ้ง
+                    </button>
+                    <div class="collapse" id="dateCollapse">
+                        <form method="get" name="date" action="">
+                            <input type="hidden" name="senderId" id="senderIdValue"
+                                   value="{{ app.request.get('senderId') }}"/>
+                            <input type="hidden" name="date" id="dateValue" value="{{ app.request.get('date') }}"/>
+                            <input type="hidden" name="takeorderby" id="takeOrderValue" value=""/>
+                            <input type="hidden" name="invoice" id="invoiceValue" value=""/>
+                        </form>
+                        <table class="table table-bordered table-striped table-hover" id="table">
+                            <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Mailcode</th>
+                                <th>Recipient</th>
+                                <th>Phone</th>
+                                <th>Order</th>
+                                <th>Sent</th>
+                                <th>Inv</th>
+                                <th>Courier</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for f in fields %}
+                                <tr name="{{ f.takeorderby }}">
+                                    <th>{{ f.statusnameTh }}</th>
+                                    <th>{{ f.mailcode }}</th>
+                                    <th>{{ f.ordername }}</th>
+                                    <th>{{ f.orderphoneno }}</th>
+                                    <th>{{ f.orderdate | date('d-m-Y') }}</th>
+                                    <th>{{ f.parcelMemberId }}</th>
+                                    <th>{{ f.paymentInvoice }}</th>
+                                    <th>{{ f.transporterId }}</th>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+            </fieldset>
+
+
+        {% endif %}
+
+        {% if resultData != null %}
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset class="col-md-12">
+                            <legend class="legendborder"><b style="margin-left: 5px;">MAILCODE</b></legend>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <p style="margin-bottom: 0px;">{{ resultData.paymentInvoice[0].mailcode }}</p>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="col-md-12">
+                            <legend class="legendborder"><b style="margin-left: 10px;">INVOICE</b></legend>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <p style="margin-bottom: 0px;">{{ resultData.paymentInvoice[0].paymentInvoice }}</p>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <fieldset class="col-md-12">
+                            <legend class="legendborder"><b style="margin-left: 5px;">สถานะ</b></legend>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    {% if resultData.globalOrderStatus is not empty %}
+                                        <p style="margin-bottom: 0px;"><h3
+                                            style="text-align: center;">{{ resultData.globalOrderStatus[0].statusnameTh }}</h3></p>
+                                    {% else %}
+                                        <p style="margin-bottom: 0px;"> - </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <fieldset class="col-md-12">
+                            <legend class="legendborder"><b style="margin-left: 5px;">ทำรายการ</b></legend>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    {% if resultData.merchantBilling[0].orderdate != null %}
+                                        <p style="margin-bottom: 0px;">{{ resultData.merchantBilling[0].orderdate | date('d-m-Y') }}</p>
+                                    {% else %}
+                                        <p style="margin-bottom: 0px;">-</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                        <fieldset class="col-md-12">
+                            <legend class="legendborder"><b style="margin-left: 10px;">ส่งออก</b></legend>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    {% if resultData.paymentInvoice[0].sendmaildate != null %}
+                                        <p style="margin-bottom: 0px;">{{ resultData.paymentInvoice[0].sendmaildate | date('d-m-Y') }}</p>
+                                    {% else %}
+                                        <p style="margin-bottom: 0px;">-</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                        <fieldset class="col-md-12">
+                            <legend class="legendborder"><b style="margin-left: 10px;">ส่งสำเร็จ</b></legend>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    {% if resultData.paymentInvoice[0].transactiondate != null %}
+                                        <p style="margin-bottom: 0px;">{{ resultData.paymentInvoice[0].transactiondate | date('d-m-Y') }}</p>
+                                    {% else %}
+                                        <p style="margin-bottom: 0px;">-</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                {% endif %}
+                {% if resultData != null %}
+                <fieldset class="col-md-12">
+                    <legend class="legendborder"><b style="margin-left: 8px;">ข้อมูลผู้รับ</b></legend>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>ผุ้รับ :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.merchantBilling[0].ordername != null %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.merchantBilling[0].ordername }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>เบอร์ติดต่อ :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.merchantBilling[0].orderphoneno != null %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.merchantBilling[0].orderphoneno }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>ที่อยู่ :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.merchantBilling[0].address != null %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.merchantBilling[0].address }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>COD :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.COD != null %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.COD }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>ส่งโดย :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.transporter != null %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.transporter.transporterName }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>SLA :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.zipCode != null %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.zipCode[0].dhlSla }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>SHOP :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.merchantConfig[0].merchantname != null %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.merchantConfig[0].merchantname }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>ผู้ส่ง :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.parcelMember != null %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.parcelMember[0].firstname }} {{ resultData.parcelMember[0].lastname }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>เบอร์ผู้ส่ง :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.parcelMember[0].phoneregis is defined %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.parcelMember[0].phoneregis }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <b>ผู้ทำรายการ :</b>
+                        </div>
+                        <div class="col-8">
+                            {% if resultData.globalAuthen != null %}
+                                <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.globalAuthen }}</label>
+                            {% else %}
+                                <label></label>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-6">
+                <fieldset class="col-md-12">
+                    <legend class="legendborder"><b>รุปหน้ากล่อง</b></legend>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {% if resultData.parcelTemp != null %}
+                                <div id="viewer" class="viewer"></div>
+                                <input type="hidden" id="parcelTemp" value="{{ resultData.parcelTemp[0].imageurl }}">
+                            {% else %}
+                                <p></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <div class="row">
+                <div class="col-lg-4 col-md-4"></div>
+                <div class="col-lg-4 col-md-4"></div>
+                <div class="col-lg-4 col-md-4" style="text-align: right;">
+                    <button type="button" class="btn btn btn-outline-secondary" data-toggle="modal"
+                            data-target="#myModal" style="text-align: right;">
+                        อัพเดทสถานะ
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog modal-lg">
+                {{ form_start(form2, {'action': path('remark'), 'method': 'GET'}) }}
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Remarks</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>MAILCODE*</label>
+                            <p>{{ form_widget(form2.mailCode, {"attr": {"value" : resultData.paymentInvoice[0].mailcode, "class" : "form-control", "readonly" : "true"}}) }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label>สถานะ*</label>
+
+                            <div class="row">
+                                {% for status in form2.status %}
+                                    {% if loop.index is odd %}
+                                        <div class="col-6">
+                                            <label style=" margin-bottom: 0px;margin-top: 0px;">{{ form_widget(status) }} {{ form_label(status) }}</label>
+                                        </div>
+                                    {% else %}
+                                        <div class="col-6">
+                                            <label style=" margin-bottom: 0px;margin-top: 0px;">{{ form_widget(status) }} {{ form_label(status) }}</label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Next Process*</label>
+                            <p>{{ form_widget(form2.process, {"attr": {"class" : "form-control"}}) }}</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>หมายเหตุ*</label>
+                            <p>{{ form_widget(form2.note, {"attr": {"class" : "form-control"}}) }}</p>
+                        </div>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        {{ form_widget(form2.submit) }}
+                    </div>
+                </div>
+                {{ form_end(form2) }}
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 10px;">
+                <div class="boxHead">
+                    <label>ข้อมูลเพิ่มเติม</label>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <fieldset class="col-md-12">
+                                    <legend class="legendborder-product"><b style="margin-left: 8px;">รายการสินค้า</b>
+                                    </legend>
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            {% if resultData.merchantDetail != null %}
+                                                {% for merchantDetail in resultData.merchantDetail %}
+                                                    <div class="row">
+                                                        <div class="col-10">
+                                                            <b>{{ merchantDetail.productname }}</b>
+                                                        </div>
+                                                        <div class="col-2">
+
+                                                            <label>{{ merchantDetail.productorder }}</label>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <p></p>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-md-6">
+                                <fieldset class="col-md-12">
+                                    <legend class="legendborder-product"><b style="margin-left: 8px;">NOTE</b>
+                                    </legend>
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            {% if resultData.merchantBilling[0].ordershortnote != null %}
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <b>{{ resultData.merchantBilling[0].ordershortnote }}</b>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <p></p>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <fieldset class="col-md-12">
+                                    <legend class="legendborder-product"><b style="margin-left: 8px;">ช่วยคีย์</b>
+                                    </legend>
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            {% if resultData.parcelTempData != null %}
+                                                <table class="table" style="table-layout: fixed;">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>เบอร์โทร</td>
+                                                        <td>ชื่อผู้คีย์</td>
+                                                        <td>กลุ่ม</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for pd in resultData.parcelTempData %}
+                                                        <tr>
+                                                            <td>{{ pd.operator }}</td>
+                                                            <td>{{ pd.operatorName }}</td>
+                                                            <td>{{ pd.groupName }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            {% else %}
+                                                <p></p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-6">
+                                <fieldset class="col-md-12">
+                                    <legend class="legendborder"><b style="margin-left: 10px;">CS LOG</b></legend>
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="list-group">
+                                                {% for trackingLog in resultData.trackingLog %}
+                                                    {% if trackingLog != null %}
+                                                        <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                                            <div class="d-flex w-100 justify-content-between">
+                                                                <small>โดย <b>{{ trackingLog.user }}</b></small>
+                                                            </div>
+                                                            <p class="mb-1">{{ trackingLog.remarks }}</p>
+                                                            <small>{{ trackingLog.tstamp | date('Y-m-d H:i:s') }}</small>
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <fieldset class="col-md-12">
+                                    <legend class="legendborder-product"><b style="margin-left: 8px;">การโอน COD</b>
+                                    </legend>
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            {% if resultData.pcComApp != null %}
+                                                <table class="table" style="table-layout: fixed;">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>ยอดโอน</td>
+                                                        <td>โอนสำเร็จ</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for pc in resultData.pcComApp %}
+                                                        <tr>
+                                                            <td>{{ pc.transferAmt | number_format(2, '.', ',') }}</td>
+                                                            <td>{{ pc.tfd | date('d-m-Y') }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            {% else %}
+                                                <p></p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('js/jquery.mousewheel.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.iviewer.js') }}"></script>
+        <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/w/dt/dt-1.10.18/datatables.min.js"></script>
+        <script>
+            var turnOnOffUI;
+            $("#myModal").on('show.bs.modal', function () {
+                $('#viewer').hide();
+            });
+
+            $("#myModal").on('hide.bs.modal', function () {
+                $('#viewer').show();
+            });
+            $(document).ready(function () {
+                var table = $('#table').DataTable({
+                    "lengthChange": false,
+                    "searching": false
+                });
+                var parcelTemp = $('#parcelTemp').val();
+                $("#viewer").iviewer({
+                    src: parcelTemp,
+                    update_on_resize: true,
+                    zoom_animation: true,
+                    mousewheel: true,
+                    ui_disabled: false,
+                    onMouseMove: function (ev, coords) {
+                    },
+                    onStartDrag: function (ev, coords) {
+                        return true;
+                    }, //this image will not be dragged
+                    onDrag: function (ev, coords) {
+                    }
+                });
+                $('#table tbody').on('click', 'tr', function () {
+                    var data = table.row(this).data();
+                    $('#takeOrderValue').val($(this).attr('name'));
+                    $('#invoiceValue').val(data[6]);
+                    $('form[name=date]').submit();
+                });
+            });
+        </script>
+    {% endblock %}

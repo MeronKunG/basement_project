@@ -1,0 +1,302 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CS-CALLING - Q CONFIG{% endblock %}
+
+{% block body %}
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			max-width: 800px;
+			width: 95%;
+			font: 18px/1.5 sans-serif;
+		}
+
+		.example-wrapper code {
+			background: #F5F5F5;
+			padding: 1px 6px;
+		}
+
+		.btn-outline-secondary {
+			border-color: #408863 !important;
+			color: #408863 !important;
+		}
+
+		.btn:active {
+			background-color: #408863 !important;
+		}
+
+		.btn-secondary {
+			background-color: #408863 !important;
+		}
+
+		.btn-outline-secondary:hover {
+			color: white !important;
+			background-color: #408863 !important;
+		}
+
+		.btn-secondary:focus {
+			box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5) !important;
+		}
+
+		input[type=checkbox], input[type=radio] {
+			color: red;
+		}
+
+
+	</style>
+
+	<div class="row">
+		<div class="col-lg-2 col-md-2"></div>
+		<div class="col-lg-8 col-md-8" style=" margin-top: 70px; ">
+			<h1 style="text-align: center;">Q CONFIG</h1>
+			{{ form_start(form) }}
+
+			<fieldset class="form-group">
+				<div class="row">
+					<b class="col-form-label col-md-2 pt-0">TYPE:*</b>
+					<div class="col-sm-10">
+						<div class="form-check">
+							<label class="col-md-2 col-form-label"></label>
+							{{ form_widget(form.merType[0]) }}
+							<label class="form-check-label">
+								PARCEL
+							</label>
+						</div>
+						<div class="form-check">
+							<label class="col-md-2 col-form-label"></label>
+							{{ form_widget(form.merType[1]) }}
+							<label class="form-check-label">
+								HOLDING+HYBRID
+							</label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+
+			<div class="form-group row">
+				<b for="inputPassword3" class="col-md-4 col-form-label">วันที่จัดส่ง*</b>
+				<div class="col-md-8" style="padding-left: 12px;">
+					{{ form_widget(form.dateTime,{"attr": {"class" : "form-control"}}) }}
+					{#                        <img src="{{ asset('images/calendar.png') }}" height="40">#}
+				</div>
+			</div>
+
+			<fieldset class="form-group">
+				<div class="row">
+					<b class="col-form-label col-md-2 pt-0">COD/NORMAL*</b>
+					<div class="col-sm-10">
+						<div class="form-check">
+							<label class="col-md-2 col-form-label"></label>
+							{{ form_widget(form.billing[0]) }}
+							<label class="form-check-label">
+								COD
+							</label>
+						</div>
+						<div class="form-check">
+							<label class="col-md-2 col-form-label"></label>
+							{{ form_widget(form.billing[1]) }}
+							<label class="form-check-label">
+								NORMAL
+							</label>
+						</div>
+						<div class="form-check">
+							<label class="col-md-2 col-form-label"></label>
+							{{ form_widget(form.billing[2]) }}
+							<label class="form-check-label">
+								COD+NORMAL
+							</label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset class="form-group">
+				<div class="row">
+					<b class="col-form-label col-md-2 pt-0">CHECK*</b>
+					<div class="col-sm-10">
+						<div class="form-check">
+							<label class="col-md-2 col-form-label"></label>
+							{{ form_widget(form.check[0]) }}
+							<label class="form-check-label">
+								Delivery Process
+							</label>
+						</div>
+						<div class="form-check">
+							<label class="col-md-2 col-form-label"></label>
+							{{ form_widget(form.check[1]) }}
+							<label class="form-check-label">
+								No Remarks
+							</label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+
+			{{ form_end(form) }}
+		</div>
+		<div class="col-lg-2 col-md-2"></div>
+	</div>
+
+	{% if app.session.get('type') != null %}
+		<div class="row">
+			<div class="col-lg-2 col-md-2"></div>
+			<div class="col-lg-8 col-md-8">
+				{% set typemer = '' %}
+				{% for type in app.session.get('type') %}
+					{% if type == 'parcel' %}
+						{% set typemer = 'PARCEL Q' %}
+					{% else %}
+						{% set typemer = 'HOLDING+HYBRID Q' %}
+					{% endif %}
+				{% endfor %}
+				<h2 style="color: #408863;">{{ typemer }}</h2>
+				<table class="table table-bordered">
+					<thead style="background-color: #8fd19e;">
+					<tr>
+						<th scope="col" style="text-align: center;">วันที่ส่งออก</th>
+						<th scope="col" style="text-align: center;">COD/NORMAL</th>
+						<th scope="col" style="text-align: center;">ประเภทการโทร</th>
+						<th scope="col" style="text-align: center;">Shop Selection</th>
+						<th scope="col" style="text-align: center;">จำนวน</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td style="text-align: center;">{{ app.session.get('dateTime')| date('d/m/Y') }}</td>
+						{% if app.session.get('billing') == 'codnormal' %}
+							{% set codnormal = 'cod+normal' %}
+							<td style="text-align: center;">{{ codnormal }}</td>
+						{% else %}
+							<td style="text-align: center;">{{ app.session.get('billing') }}</td>
+						{% endif %}
+						{% if app.session.get('check') == 'yes' %}
+							<td style="text-align: center;">Delivery Process</td>
+						{% else %}
+							<td style="text-align: center;">No Remarks</td>
+						{% endif %}
+						<td style="text-align: center;">
+							<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#myModal">
+								เลือกร้าน
+							</button>
+						</td>
+						{% if shopNum != null %}
+							<td style="text-align: center;">{{ shopNum }}</td>
+						{% else %}
+							<td style="text-align: center;">0</td>
+						{% endif %}
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-lg-2 col-md-2"></div>
+		</div>
+
+		<!-- The Modal -->
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					{{ form_start(form2, {'action': path('shop_save'), 'method': 'POST'}) }}
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h4 class="modal-title">Shop Selection </h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body">
+						<div class="form-group">
+							<p><b>Results:</b> <span id="results"></span></p>
+							<label>เลือกร้าน*</label>
+							<div class="col-12">
+								<input type="checkbox" id="select_all"> <label
+										style="font-weight: bold">เลือกทั้งหมด</label>
+							</div>
+							{% for shop in form2.shop %}
+								{% if loop.index is odd %}
+									<div class="col-6">
+										<label style=" margin-bottom: 0px;margin-top: 0px;">{{ form_widget(shop) }} {{ form_label(shop) }}</label>
+									</div>
+								{% else %}
+									<div class="col-6">
+										<label style=" margin-bottom: 0px;margin-top: 0px;">{{ form_widget(shop) }} {{ form_label(shop) }}</label>
+									</div>
+								{% endif %}
+							{% endfor %}
+						</div>
+					</div>
+					{% set t = app.session.get('shopId') | json_encode %}
+					{{ form_widget(form2.hiddenName, {"attr": {"value" : t }}) }}
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<div class="col-4"></div>
+						<div class="col-4"></div>
+						<div class="col-4">
+							{{ form_widget(form2.save , {"attr": {"class" : "btn-outline-secondary form-control"}}) }}
+						</div>
+					</div>
+					{{ form_end(form2) }}
+
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+	<script>
+        $(document).ready(function () {
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+
+            $('#select_all').click(function () {
+                var c = this.checked;
+                $(':checkbox').prop('checked', c);
+                showValues();
+            });
+
+            var shop;
+            if(typeof $('#form_hiddenName').val() != 'undefined') {
+                shop = jQuery.parseJSON($('#form_hiddenName').val());
+            } else {
+                shop = null;
+            }
+
+
+            if (shop != null) {
+                for (var i = 0; i < shop.length; i++) {
+                    if (shop[i]) document.querySelectorAll('input[value="' + shop[i] + '"][type="checkbox"]')[0].checked = true;
+                }
+            }
+
+            function showValues() {
+                var fields = $("input[name*='form[shop]']:checkbox:checked").map(function () {
+                    return $(this).next("label").text().split(' ').join('%20');
+                }).get();
+                var fields2 = $("input[name*='form[shop]']:checkbox").length;
+                if (fields.length === fields2) {
+                    $('#select_all').prop('checked', true);
+                } else {
+                    $('#select_all').prop('checked', false);
+                }
+                if (fields.length === 0) {
+                    $('#form_save').prop('disabled', true);
+                } else {
+                    $('#form_save').prop('disabled', false);
+                }
+                $("#results").empty();
+                jQuery.each(fields, function (i, field) {
+                    $("#results").append(field + ", ");
+                });
+            }
+
+            $("input[name*='form[shop]']:checkbox").click(showValues);
+            $("select").change(showValues);
+            showValues();
+        });
+
+	</script>
+{% endblock %}

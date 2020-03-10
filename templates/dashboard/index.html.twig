@@ -1,0 +1,341 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}CS-CALLING - CS DASHBOARD{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/w/dt/dt-1.10.18/datatables.min.css"/>
+{% endblock %}
+{% block body %}
+	<style>
+		fieldset {
+			border: 1px solid #ddd !important;
+			margin: 0;
+			xmin-width: 0;
+			padding: 10px;
+			position: relative;
+			border-radius: 4px;
+			padding-left: 10px !important;
+			background-color: #eff9f5;
+			border-color: #408863 !important;
+		}
+
+		fieldset.error {
+			border: 1px solid #ddd !important;
+			margin: 0;
+			xmin-width: 0;
+			padding: 10px;
+			position: relative;
+			border-radius: 4px;
+			padding-left: 10px !important;
+			background-color: #64001A;
+			border-color: black !important;
+		}
+
+		legend {
+			font-size: 14px;
+			font-weight: bold;
+			margin-bottom: 0px;
+			width: auto;
+			/*border: 1px solid #ddd;*/
+			/*border-radius: 4px;*/
+			padding: 5px 5px 5px 10px;
+			background-color: #C7C7C7;
+
+		}
+
+		.container2 {
+			width: 100%;
+			padding-right: 5px;
+			padding-left: 5px;
+			margin-right: auto;
+			margin-left: auto;
+		}
+
+		.legendborder {
+			font-size: 14px;
+			font-weight: bold;
+			margin-bottom: 0px;
+			width: 100px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			padding: 5px 5px 5px 10px;
+			background-color: #C7C7C7;
+			color: #707070;
+
+		}
+
+		.legendborder-product {
+			font-size: 14px;
+			font-weight: bold;
+			margin-bottom: 0px;
+			width: 120px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			padding: 5px 5px 5px 10px;
+			background-color: #C7C7C7;
+			color: #707070;
+
+		}
+
+		.legendborderwidth {
+			font-size: 14px;
+			font-weight: bold;
+			margin-bottom: 0px;
+			width: 230px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			padding: 5px 5px 5px 10px;
+			background-color: #C7C7C7;
+			color: #707070;
+
+		}
+
+		.legendbordertel {
+			font-size: 14px;
+			font-weight: bold;
+			margin-bottom: 0px;
+			width: 150px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			padding: 5px 5px 5px 10px;
+			background-color: #C7C7C7;
+			color: #707070;
+
+		}
+
+		.viewer {
+			width: 100%;
+			height: 500px;
+			/*border: 1px solid black;*/
+			position: relative;
+		}
+
+		.control, fieldset {
+			margin: 6px 0;
+		}
+
+		.boxHead {
+			display: block;
+			height: 40px;
+			background-color: #408863;
+			color: white;
+			border-radius: 7px;
+		}
+
+		b {
+			font-size: 16px;
+
+		}
+
+		label {
+			font-size: 18px;
+			margin-top: 5px;
+			margin-left: 15px;
+		}
+
+
+		.btn-tel {
+			background-color: #408863 !important;
+			color: white !important;
+		}
+
+		.btn:focus {
+			box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+		}
+
+		.btn:active {
+			background-color: #408863 !important;
+		}
+
+		btn-outline-secondary {
+			border-color: #408863 !important;
+			color: #408863 !important;
+		}
+
+		.btn-outline-secondary:hover {
+			color: white !important;
+			background-color: #408863 !important;
+		}
+
+		.form-control:focus {
+			border-color: white !important;
+			box-shadow: white !important;
+		}
+
+		.btn-outline-primary {
+			border-color: #408863 !important;
+			color: #408863 !important;
+		}
+
+		.btn:active {
+			background-color: #408863 !important;
+		}
+
+		.btn-outline-primary:hover {
+			color: white !important;
+			background-color: #408863 !important;
+		}
+
+		.btn-outline-primary.focus, .btn-outline-secondary:focus {
+			box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5) !important;
+		}
+	</style>
+
+	<div class="example-wrapper">
+
+		<div align="center" style="margin-top: 75px;">
+			<h2 style="margin-top: 20px;">Dashboard</h2>
+		</div>
+		<div class="container" style="padding-right: 25%; padding-left: 25%;">
+			<div class="row">
+				<fieldset class="col-md-12" style="padding: 5px;">
+					<h3>กรุณาเลือกเดือน/ปี</h3>
+					{{ form_start(form) }}
+					<div class="row">
+						<div class="col-sm-8">{{ form_widget(form.getMonth, {"attr": {"class" : "form-control"}}) }}</div>
+						<div class="col-sm-4">{{ form_widget(form.getYear, {"attr": {"class" : "form-control"}}) }}</div>
+					</div>
+					{{ form_end(form) }}
+
+					{% if app.session.get('dateMonth') is not null %}
+						<div class="alert alert-success mt-2">
+							<a>เดือนที่เลือก</a> : <strong>{{ app.session.get('dateMonth') }}</strong>
+						</div>
+					{% endif %}
+				</fieldset>
+			</div>
+		</div>
+
+
+		<div class="container" style="padding-right: 1px; padding-left: 1px;">
+			{% if parcelData is not empty %}
+			<div class="row">
+				<fieldset class="col-md-12">
+					<table class="table table-bordered table-striped table-hover">
+						<thead>
+						<tr>
+							<th>Parcel Shipment :</th>
+							<th>{{ lastData.total | number_format(0, ',') }}</th>
+						</tr>
+						<tr>
+							<th>BKK</th>
+							<th>{{ lastData.BKK.105.percent | number_format(2, '.', ',') }} %</th>
+						</tr>
+						<tr>
+							<th>SHORT</th>
+							<th>{{ lastData.SHORT.105.percent | number_format(2, '.', ',') }} %</th>
+						</tr>
+						<tr>
+							<th>LONG</th>
+							<th>{{ lastData.LONG.105.percent | number_format(2, '.', ',') }} %</th>
+						</tr>
+						</thead>
+					</table>
+				</fieldset>
+			</div>
+
+			<div class="row">
+				<fieldset class="col-md-6">
+					<h3>Tops 5 Parcel by Shop</h3>
+
+					<table class="table table-bordered table-striped table-hover">
+						<thead>
+						<tr>
+							<th>Shop Name</th>
+							<th>Parcel / Pcs</th>
+							<th>Per / Day</th>
+							<th>%</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for k, p in parcelData %}
+							<tr>
+								<th>{{ p.name }}</th>
+								<th>{{ p.amounts | number_format(0, ',') }}</th>
+								<th>{{ p.per | number_format(0, ',') }}</th>
+								<th>{{ p.percent | number_format(2, '.', ',') }}</th>
+							</tr>
+						{% endfor %}
+						</tbody>
+						<tfoot>
+						<tr>
+							<th>Total</th>
+							<th>{{ total.t_amount | number_format(0, ',') }}</th>
+							<th>{{ total.t_per | number_format(0, ',') }}</th>
+							<th>{{ total.t_percent | number_format(2, '.', ',') }}</th>
+						</tr>
+						</tfoot>
+					</table>
+				</fieldset>
+				<fieldset class="col-md-6">
+					<br/><br/>
+
+					<table class="table table-bordered table-striped table-hover">
+						<thead>
+						<tr>
+							<th>จัดส่งแล้ว</th>
+							<th>สินค้าถึงปลายทาง</th>
+							<th>สินค้าตีกลับ</th>
+							<th>%</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for k, t in test2 %}
+							<tr>
+								<th>{{ t.path.104 | number_format(0, ',') }}</th>
+								<th>{{ t.path.105 | number_format(0, ',') }}</th>
+								<th>{{ t.path.106 | number_format(0, ',') }}</th>
+								<th>{{ total.t_return[k] | number_format(2, '.', ',') }}</th>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</fieldset>
+			</div>
+
+			<div class="row">
+				<fieldset class="col-md-12">
+					<h3>Tops 10 Return by Shop</h3>
+
+					<table class="table table-bordered table-striped table-hover">
+						<thead>
+						<tr>
+							<th>Shop Name</th>
+							<th>Total Shipments</th>
+							<th>Cod / Pcs</th>
+							<th>Normal / Pcs</th>
+							<th>Total returned / Day</th>
+							<th>Percentage</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for k, p in parcelData2 %}
+							<tr>
+								<th>{{ p.name }}</th>
+								<th>{{ p.0.amount | number_format(0, ',') }}</th>
+								<th>{{ p.type.cod | number_format(0, ',') }}</th>
+								<th>{{ p.type.normal | number_format(0, ',') }}</th>
+								<th>{{ p.0.total | number_format(0, ',') }}</th>
+								<th>{{ p.0.percent | number_format(2, '.', ',') }}</th>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</fieldset>
+			</div>
+			{% else %}
+				<div class="row">
+					<fieldset class="col-md-12">
+						<div class="alert alert-danger mt-2">
+							<strong>ไม่พบข้อมูล</strong>
+						</div>
+					</fieldset>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+<script src="{{ asset('js/jquery.mousewheel.min.js') }}"></script>
+</script>
+{% endblock %}

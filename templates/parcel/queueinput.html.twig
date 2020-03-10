@@ -1,0 +1,827 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CS-CALLING - QUEUE SEARCH{% endblock %}
+
+{% block body %}
+<style>
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 0;
+        xmin-width: 0;
+        padding: 10px;
+        position: relative;
+        border-radius: 4px;
+        padding-left: 10px !important;
+        background-color: #eff9f5;
+        border-color: #408863 !important;
+    }
+
+    legend {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 0px;
+        width: auto;
+        /*border: 1px solid #ddd;*/
+        /*border-radius: 4px;*/
+        padding: 5px 5px 5px 10px;
+        background-color: #C7C7C7;
+
+    }
+
+    .legendborder {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 0px;
+        width: 100px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 5px 5px 10px;
+        background-color: #C7C7C7;
+        color: #707070;
+
+    }
+
+    .legendborder-product {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 0px;
+        width: 120px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 5px 5px 10px;
+        background-color: #C7C7C7;
+        color: #707070;
+
+    }
+
+    .legendborderwidth {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 0px;
+        width: 230px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 5px 5px 10px;
+        background-color: #C7C7C7;
+        color: #707070;
+
+    }
+
+    .legendbordertel {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 0px;
+        width: 150px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 5px 5px 10px;
+        background-color: #C7C7C7;
+        color: #707070;
+
+    }
+
+    .viewer {
+        width: 100%;
+        height: 500px;
+        /*border: 1px solid black;*/
+        position: relative;
+    }
+
+    .control, fieldset {
+        margin: 6px 0;
+    }
+
+    .boxHead {
+        display: block;
+        height: 40px;
+        background-color: #408863;
+        color: white;
+        border-radius: 7px;
+    }
+
+    b {
+        font-size: 16px;
+
+    }
+
+    label {
+        font-size: 18px;
+        margin-top: 5px;
+        margin-left: 15px;
+    }
+
+
+    .btn-tel {
+        background-color: #408863 !important;
+        color: white !important;
+    }
+
+    .btn:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+    }
+
+    .btn:active {
+        background-color: #408863 !important;
+    }
+
+    btn-outline-secondary {
+        border-color: #408863 !important;
+        color: #408863 !important;
+    }
+
+    .btn-outline-secondary:hover {
+        color: white !important;
+        background-color: #408863 !important;
+    }
+
+    .form-control:focus {
+        border-color: white !important;
+        box-shadow: white !important;
+    }
+
+    .btn-outline-primary {
+        border-color: #408863 !important;
+        color: #408863 !important;
+    }
+
+    .btn:active {
+        background-color: #408863 !important;
+    }
+
+    .btn-outline-primary:hover {
+        color: white !important;
+        background-color: #408863 !important;
+    }
+
+    .btn-outline-primary.focus, .btn-outline-secondary:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5) !important;
+    }
+</style>
+
+<div class="example-wrapper">
+
+    <div align="center" style="margin-top: 75px;">
+        <h2 style="margin-top: 20px;">QUEUE SEARCH</h2>
+    </div>
+    {{ form_start(form) }}
+    <fieldset class="col-md-12">
+        <div class="row">
+            <div class="col-12">
+                {{ form_widget(form.mailcode,{"attr": {"class" : "form-control", "placeholder" : "กรุณาระบุ MailCode หรือ Invoice"}}) }}
+            </div>
+        </div>
+    </fieldset>
+    {{ form_end(form) }}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% if resultData != null %}
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <fieldset class="col-md-12">
+                        <legend class="legendborder"><b style="margin-left: 5px;">MAILCODE</b></legend>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <p style="margin-bottom: 0px;">{{ resultData.paymentInvoice[0].mailcode }}</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-6">
+                    <fieldset class="col-md-12">
+                        <legend class="legendborder"><b style="margin-left: 10px;">INVOICE</b></legend>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <p style="margin-bottom: 0px;">{{ resultData.paymentInvoice[0].paymentInvoice }}</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset class="col-md-12">
+                        <legend class="legendborder"><b style="margin-left: 5px;">สถานะ</b></legend>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                {% if resultData.globalOrderStatus is not empty %}
+                                    <p style="margin-bottom: 0px;"><h3
+                                        style="text-align: center;">{{ resultData.globalOrderStatus[0].statusnameTh }}</h3></p>
+                                {% else %}
+                                    <p style="margin-bottom: 0px;"> - </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <fieldset class="col-md-12">
+                        <legend class="legendborder"><b style="margin-left: 5px;">ทำรายการ</b></legend>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                {% if resultData.merchantBilling[0].orderdate != null %}
+                                    <p style="margin-bottom: 0px;">{{ resultData.merchantBilling[0].orderdate | date('d-m-Y') }}</p>
+                                {% else %}
+                                    <p style="margin-bottom: 0px;">-</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="col-md-12">
+                        <legend class="legendborder"><b style="margin-left: 10px;">ส่งออก</b></legend>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                {% if resultData.paymentInvoice[0].sendmaildate != null %}
+                                    <p style="margin-bottom: 0px;">{{ resultData.paymentInvoice[0].sendmaildate | date('d-m-Y') }}</p>
+                                {% else %}
+                                    <p style="margin-bottom: 0px;">-</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="col-md-12">
+                        <legend class="legendborder"><b style="margin-left: 10px;">ส่งสำเร็จ</b></legend>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                {% if resultData.paymentInvoice[0].transactiondate != null %}
+                                    <p style="margin-bottom: 0px;">{{ resultData.paymentInvoice[0].transactiondate | date('d-m-Y') }}</p>
+                                {% else %}
+                                    <p style="margin-bottom: 0px;">-</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            {% endif %}
+            {% if resultData != null %}
+            <fieldset class="col-md-12">
+                <legend class="legendborder"><b style="margin-left: 8px;">ข้อมูลผู้รับ</b></legend>
+                <div class="row">
+                    <div class="col-4">
+                        <b>ผุ้รับ :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.merchantBilling[0].ordername != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.merchantBilling[0].ordername }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>เบอร์ติดต่อ :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.merchantBilling[0].orderphoneno != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.merchantBilling[0].orderphoneno }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>ที่อยู่ :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.merchantBilling[0].address != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.merchantBilling[0].address }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>COD :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.COD != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.COD }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>ค่าจัดส่ง :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.merchantBilling[0].transportprice != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.merchantBilling[0].transportprice | number_format(0, ',') }} </label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>ส่งโดย :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.transporter.transporterName != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.transporter.transporterName }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>SLA :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.zipCode[0].dhlSla != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.zipCode[0].dhlSla }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>SHOP :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.merchantConfig[0].merchantname != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.merchantConfig[0].merchantname }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>ผู้ส่ง :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.parcelMember != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.parcelMember[0].firstname }} {{ resultData.parcelMember[0].lastname }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>เบอร์ผู้ส่ง :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.parcelMember[0].phoneregis is defined %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.parcelMember[0].phoneregis }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <b>ผู้ทำรายการ :</b>
+                    </div>
+                    <div class="col-8">
+                        {% if resultData.globalAuthen != null %}
+                            <label style="margin-top: 0px;margin-left: 0px;">{{ resultData.globalAuthen }}</label>
+                        {% else %}
+                            <label></label>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="col-6">
+            <fieldset class="col-md-12">
+                <legend class="legendborder"><b>รุปหน้ากล่อง</b></legend>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {% if resultData.parcelTemp != null %}
+                            <div id="viewer" class="viewer"></div>
+                            <input type="hidden" id="parcelTemp" value="{{ resultData.parcelTemp[0].imageurl }}">
+                        {% else %}
+                            <p></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <div class="row">
+            <div class="col-lg-4 col-md-4"></div>
+            <div class="col-lg-4 col-md-4">
+            </div>
+            <div class="col-lg-4 col-md-4" style="text-align: right;">
+                <button type="button" class="btn btn btn-outline-secondary" data-toggle="modal"
+                        data-target="#myModal_return" style="text-align: right;">
+                    สาเหตุการตีกลับ
+                </button>
+                <button type="button" class="btn btn btn-outline-secondary" data-toggle="modal"
+                        data-target="#myModal" style="text-align: right;">
+                    อัพเดทสถานะ
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+<!-- The Modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-lg">
+            {{ form_start(form2, {'action': path('remark'), 'method': 'GET'}) }}
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Remarks</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>MAILCODE*</label>
+                        <p>{{ form_widget(form2.mailCode, {"attr": {"value" : resultData.paymentInvoice[0].mailcode, "class" : "form-control", "readonly" : "true"}}) }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>สถานะ*</label>
+
+                        <div class="row">
+                            {% for status in form2.status %}
+                                {% if loop.index is odd %}
+                                    <div class="col-6">
+                                        <label style=" margin-bottom: 0px;margin-top: 0px;">{{ form_widget(status) }} {{ form_label(status) }}</label>
+                                    </div>
+                                {% else %}
+                                    <div class="col-6">
+                                        <label style=" margin-bottom: 0px;margin-top: 0px;">{{ form_widget(status) }} {{ form_label(status) }}</label>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Next Process*</label>
+                        <p>{{ form_widget(form2.process, {"attr": {"class" : "form-control"}}) }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>หมายเหตุ*</label>
+                        <p>{{ form_widget(form2.note, {"attr": {"class" : "form-control"}}) }}</p>
+                    </div>
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    {{ form_widget(form2.submit) }}
+                </div>
+            </div>
+            {{ form_end(form2) }}
+        </div>
+    </div>
+
+<!-- The Modal -->
+    <div class="modal fade" id="myModal_return">
+        <div class="modal-dialog modal-lg">
+            {{ form_start(form3, {'action': path('return_submit'), 'method': 'GET'}) }}
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Reason</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>MAILCODE*</label>
+                        <p>{{ form_widget(form3.mailCode, {"attr": {"value" : resultData.paymentInvoice[0].mailcode, "class" : "form-control", "readonly" : "true"}}) }}</p>
+                    </div>
+                    {% if resultData.merchantConfig[0].merType == "afa" or resultData.merchantConfig[0].merType == "holding" %}
+                        <div class="form-group">
+                            <label>ประเภทการตีกลับ*</label>
+                            <div class="row" style="margin-left: 4px;">
+                                <div class="col-6">
+                                    <label style=" margin-bottom: 0px;margin-top: 0px;"><input type="radio"
+                                                                                               class="form-check-input"
+                                                                                               value="1"
+                                                                                               name="return_reason[cat]"
+                                                                                               required>
+                                        ลดหนี้</label>
+                                </div>
+                                <div class="col-6">
+                                    <label style=" margin-bottom: 0px;margin-top: 0px;"><input type="radio"
+                                                                                               class="form-check-input"
+                                                                                               value="2"
+                                                                                               name="return_reason[cat]"
+                                                                                               required>
+                                        เคลม</label>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <label>สาเหตุการตีกลับ*</label>
+                        <div class="row">
+                            {% for reason in form3.reason %}
+                                {% if loop.index is odd %}
+                                    <div class="col-6">
+                                        <label style=" margin-bottom: 0px;margin-top: 0px;">{{ form_widget(reason, { 'attr': {'class': 'reason'} }) }} {{ form_label(reason) }}</label>
+                                    </div>
+                                {% else %}
+                                    <div class="col-6">
+                                        <label style=" margin-bottom: 0px;margin-top: 0px;">{{ form_widget(reason, { 'attr': {'class': 'reason'} }) }} {{ form_label(reason) }}</label>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="card col-12">
+                                <div class="card-body" style="margin-left: 4px;">
+                                    <div id="formWidget"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>หมายเหตุ</label>
+                        <p>{{ form_widget(form3.note, {"attr": {"class" : "form-control"}}) }}</p>
+                    </div>
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    {{ form_widget(form3.submit) }}
+                    <input type="hidden" name="page" value="queue_search">
+                </div>
+            </div>
+            {{ form_end(form3) }}
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <div class="boxHead">
+                <label>ข้อมูลเพิ่มเติม</label>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <fieldset class="col-md-12">
+                                <legend class="legendborder-product"><b style="margin-left: 8px;">รายการสินค้า</b>
+                                </legend>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        {% if resultData.merchantDetail != null %}
+                                            {% for merchantDetail in resultData.merchantDetail %}
+                                                <div class="row">
+                                                    <div class="col-10">
+                                                        <b>{{ merchantDetail.productname }}</b>
+                                                    </div>
+                                                    <div class="col-2">
+
+                                                        <label>{{ merchantDetail.productorder }}</label>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p></p>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-md-6">
+                            <fieldset class="col-md-12">
+                                <legend class="legendborder-product"><b style="margin-left: 8px;">NOTE</b>
+                                </legend>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        {% if resultData.merchantBilling[0].ordershortnote != null %}
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <b>{{ resultData.merchantBilling[0].ordershortnote }}</b>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <p></p>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <fieldset class="col-md-12">
+                                <legend class="legendborder-product"><b style="margin-left: 8px;">ช่วยคีย์</b>
+                                </legend>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        {% if resultData.parcelTempData != null %}
+                                            <table class="table" style="table-layout: fixed;">
+                                                <thead>
+                                                <tr>
+                                                    <td>เบอร์โทร</td>
+                                                    <td>ชื่อผู้คีย์</td>
+                                                    <td>กลุ่ม</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for pd in resultData.parcelTempData %}
+                                                    <tr>
+                                                        <td>{{ pd.operator }}</td>
+                                                        <td>{{ pd.operatorName }}</td>
+                                                        <td>{{ pd.groupName }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <p></p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset class="col-md-12">
+                                <legend class="legendborder"><b style="margin-left: 10px;">CS LOG</b></legend>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="list-group">
+                                            {% for trackingLog in resultData.trackingLog %}
+                                                {% if trackingLog != null %}
+                                                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <small>โดย <b>{{ trackingLog.user }}</b></small>
+                                                        </div>
+                                                        <p class="mb-1">{{ trackingLog.remarks }}</p>
+                                                        <small>{{ trackingLog.tstamp | date('Y-m-d H:i:s') }}</small>
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <fieldset class="col-md-12">
+                                <legend class="legendborder-product"><b style="margin-left: 8px;">การโอน COD</b>
+                                </legend>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        {% if resultData.pcComApp != null %}
+                                            <table class="table" style="table-layout: fixed;">
+                                                <thead>
+                                                <tr>
+                                                    <td>ยอดโอน</td>
+                                                    <td>โอนสำเร็จ</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for pc in resultData.pcComApp %}
+                                                    <tr>
+                                                        <td>{{ pc.transferAmt | number_format(2, '.', ',') }}</td>
+                                                        <td>{{ pc.tfd | date('d-m-Y') }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <p></p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset class="col-md-12">
+                                <legend class="legendborder-product"><b style="margin-left: 8px;">ข้อมูลตีกลับ</b>
+                                </legend>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        {% if resultData.codReturn != null %}
+                                            <table class="table" style="table-layout: fixed;">
+                                                <thead>
+                                                <tr>
+                                                    <td>วันที่ตีกลับ</td>
+                                                    <td>รูปภาพ</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for cod in resultData.codReturn %}
+                                                    <tr>
+                                                        <td>{{ cod.scanDate | date('d-m-Y') }}</td>
+                                                        <td><a href="{{ cod.imgUrl }}" target="_blank"><button type="button" class="btn btn-primary">ดูรูปภาพ</button></a></td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <p></p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('js/jquery.mousewheel.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.iviewer.js') }}"></script>
+        <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+        <script>
+            var turnOnOffUI;
+            $("input[type='radio'][class='reason']").change(function () {
+                $('#formWidget').html('');
+                var request = $.ajax({
+                    method: "GET",
+                    url: "/remark/addsubremark",
+                    data: {'reasonId': $(this).val()}
+                });
+                request.done(function (data) {
+                    jQuery.each(data, function (i, val) {
+                        $('#formWidget').append('<p><input type="radio" name="subReasonCode" value="' + val.subReasonCode + '" required="required" />&nbsp;&nbsp;' + val.subReasonTh + '</p>');
+                    });
+
+                });
+            });
+
+            $("#myModal, #myModal_return").on('show.bs.modal', function () {
+                $('#viewer').hide();
+            });
+
+            $("#myModal, #myModal_return").on('hide.bs.modal', function () {
+                $('#viewer').show();
+            });
+            $(document).ready(function () {
+                var parcelTemp = $('#parcelTemp').val();
+                $("#viewer").iviewer({
+                    src: parcelTemp,
+                    update_on_resize: true,
+                    zoom_animation: true,
+                    mousewheel: true,
+                    ui_disabled: false,
+                    onMouseMove: function (ev, coords) {
+                    },
+                    onStartDrag: function (ev, coords) {
+                        return true;
+                    }, //this image will not be dragged
+                    onDrag: function (ev, coords) {
+                    }
+                });
+
+            });
+        </script>
+    {% endblock %}

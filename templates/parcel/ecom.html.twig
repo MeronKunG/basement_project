@@ -1,0 +1,231 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CS-CALLING - RETURN CHECK SEARCH{% endblock %}
+
+{% block body %}
+    <style>
+        fieldset {
+            border: 1px solid #ddd !important;
+            margin: 0;
+            xmin-width: 0;
+            padding: 10px;
+            position: relative;
+            border-radius: 4px;
+            padding-left: 10px !important;
+            background-color: #eff9f5;
+            border-color: #408863 !important;
+        }
+
+        legend {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: auto;
+            /*border: 1px solid #ddd;*/
+            /*border-radius: 4px;*/
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+
+        }
+
+        .legendborder {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .legendborder-product {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 120px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .legendborderwidth {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 230px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .legendbordertel {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 150px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #C7C7C7;
+            color: #707070;
+
+        }
+
+        .viewer {
+            width: 100%;
+            height: 500px;
+            /*border: 1px solid black;*/
+            position: relative;
+        }
+
+        .control, fieldset {
+            margin: 6px 0;
+        }
+
+        .boxHead {
+            display: block;
+            height: 40px;
+            background-color: #408863;
+            color: white;
+            border-radius: 7px;
+        }
+
+        b {
+            font-size: 16px;
+
+        }
+
+        label {
+            font-size: 18px;
+            margin-top: 5px;
+            margin-left: 15px;
+        }
+
+
+        .btn-tel {
+            background-color: #408863 !important;
+            color: white !important;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+        }
+
+        .btn:active {
+            background-color: #408863 !important;
+        }
+
+        btn-outline-secondary {
+            border-color: #408863 !important;
+            color: #408863 !important;
+        }
+
+        .btn-outline-secondary:hover {
+            color: white !important;
+            background-color: #408863 !important;
+        }
+
+        .form-control:focus {
+            border-color: white !important;
+            box-shadow: white !important;
+        }
+
+        .btn-outline-primary {
+            border-color: #408863 !important;
+            color: #408863 !important;
+        }
+
+        .btn:active {
+            background-color: #408863 !important;
+        }
+
+        .btn-outline-primary:hover {
+            color: white !important;
+            background-color: #408863 !important;
+        }
+
+        .btn-outline-primary.focus, .btn-outline-secondary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5) !important;
+        }
+    </style>
+
+    <div class="example-wrapper">
+
+        <div align="center" style="margin-top: 75px;">
+            <h2 style="margin-top: 20px;">RETURN CHECK SEARCH</h2>
+        </div>
+        {{ form_start(form) }}
+        <fieldset class="col-md-12">
+            <div class="row">
+                <div class="col-12">
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger" style="margin-bottom: 5px">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {{ form_widget(form.mailcode,{"attr": {"class" : "form-control", "placeholder" : "กรุณาระบุ MailCode"}}) }}
+                </div>
+            </div>
+        </fieldset>
+        {{ form_end(form) }}
+
+        {% if app.request.get('merchant_billing_delivery') is not empty %}
+            {% if resultData != null %}
+                <fieldset class="col-md-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="table table-bordered table-striped table-hover" id="table">
+                                <thead>
+                                <tr>
+                                    <th>ลดหนี้/เคลม</th>
+                                    <th>รหัสสินค้า</th>
+                                    <th>รายการ</th>
+                                    <th>ส่งออก</th>
+                                    <th>จำนวน</th>
+                                    <th>ราคา/หน่วย</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for f in resultData %}
+                                    <tr>
+                                        {% if f.catName != null %}
+                                            <th>{{ f.catName }}</th>
+                                        {% else %}
+                                            <th>-</th>
+                                        {% endif %}
+                                        <th>{{ f.parentId }}</th>
+                                        <th>{{ f.productname }}</th>
+                                        <th>{{ f.sendmaildate | date('d-m-Y') }}</th>
+                                        <th>{{ f.totalQty }}</th>
+                                        <th>{{ f.unitPrice | number_format(0, ',') }}</th>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </fieldset>
+            {% else %}
+                <fieldset class="col-md-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div align="center">ไม่พบข้อมูล</div>
+                        </div>
+                    </div>
+                </fieldset>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}

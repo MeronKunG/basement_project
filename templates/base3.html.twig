@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}CS-CALLING{% endblock %}</title>
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('css/jquery.iviewer.css') }}" rel="stylesheet" type="text/css"/>
+    <link rel="icon" href="{{asset('images/calling.ico')}}">
+
+    {#        <link href="{{ asset('fonts/Kanit-Regular.tff') }}" rel="stylesheet" media="screen"/>#}
+
+    {#        <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">#}
+    {% block stylesheets %}  {% endblock %}
+    <style type="text/css">
+        @font-face {
+            font-family: 'Kanit';
+            src:url({{asset('fonts/Kanit-Regular.ttf')}});
+        }
+        body, html{
+            font-family: 'Kanit', sans-serif;
+        }
+
+
+    </style>
+
+</head>
+<body>
+{{ include('inc/navbar2.html.twig') }}
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+{% endblock %}
+</body>
+</html>
